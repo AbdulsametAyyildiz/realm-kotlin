@@ -1,28 +1,52 @@
 # Abdülsamet's fork of [Realm Kotlin](https://github.com/realm/realm-kotlin)
 
 A fork of the deprecated [Realm Kotlin](https://github.com/realm/realm-kotlin),
-based on [Infomaniak's fork](https://github.com/Infomaniak/realm-kotlin) which
-had originally been made compatible with newer Kotlin versions thanks to the
-work of @XilinJia on their [krdb](https://github.com/XilinJia/krdb) fork.
-
-This revision modernises the toolchain to Kotlin 2.3.21 + AGP 8.13.2, ports the
-compiler plugin to the K2 compiler API, and re-brands the artifact group so it
-can be consumed as a drop-in replacement for the legacy `io.realm.kotlin`
-dependency without colliding with it on the classpath.
+modernised for Kotlin 2.3.21 + AGP 8.13.2 with the compiler plugin ported to
+the K2 compiler API. The artifact group has been re-branded so it can be
+consumed as a drop-in replacement for the legacy `io.realm.kotlin` dependency
+without colliding with it on the classpath.
 
 We have checked the diff between this revision and Realm's original project
 to be exempt from any suspicious code or reference to unchecked binaries.
+
+## Android consumer compatibility
+
+This library is compiled with AGP **8.13.2**, but the gradle plugin uses
+`compileOnly` against AGP, so the consumer brings their own AGP at apply time.
+That means you can drop this library into an Android app on **any of:**
+
+| Consumer AGP                  | Status                                            |
+|-------------------------------|---------------------------------------------------|
+| 8.13.x                        | ✅ Same version we build with — safest baseline.  |
+| **9.0 / 9.1 / 9.2** (and 9.x onward) | ✅ Verified end-to-end with AGP 9.2.0 + Gradle 9.4.1 + Kotlin 2.3.21 on a real Android consumer app — compile, install, and full Realm CRUD/Flow/observer pass on device. |
+| Older AGP 8.x (< 8.13)        | ⚠ Not tested in this fork; should work because the AAR/APK formats are stable, but Kotlin 2.3.21 is a hard requirement. |
+
+The only AGP-9-specific caveat is for **consumers who are themselves Kotlin
+Multiplatform libraries** with an Android target: AGP 9 deprecates the
+`com.android.library` + `kotlin("multiplatform")` combination in favour of
+`com.android.kotlin.multiplatform.library`, which currently lacks
+`externalNativeBuild` support. That migration is a separate concern at the
+consumer's KMP module — it does not affect plain Android apps consuming this
+library.
+
+## Other-platform consumer compatibility
+
+| Target              | Published variants                            |
+|---------------------|-----------------------------------------------|
+| Android             | arm64-v8a, armeabi-v7a, x86, x86_64           |
+| iOS device          | iosArm64                                      |
+| iOS simulator       | iosSimulatorArm64, iosX64                     |
+| JVM (desktop / server) | jvm (macOS arm64 native lib bundled)       |
+| macOS desktop       | macosArm64                                    |
+
+Intel macOS desktop (`macosX64`) is intentionally not published — see the
+"What's NOT in this fork" section below.
 
 ## Version compatibility
 
 | Fork version | Kotlin | AGP    | Gradle  | minSdk | compileSdk |
 |--------------|--------|--------|---------|--------|------------|
 | 3.3.0        | 2.3.21 | 8.13.2 | 8.14.3  | 21     | 36         |
-
-Tested against AGP **9.2.0** on the consumer side as well — `compileOnly` against
-AGP in the gradle plugin means consumers can use any modern AGP (8.x or 9.x) as
-long as they are not migrating their own KMP modules to AGP 9's
-`com.android.kotlin.multiplatform.library`.
 
 ## Coordinates
 
