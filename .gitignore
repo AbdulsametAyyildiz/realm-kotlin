@@ -337,3 +337,4 @@ dynamic_libraries.properties
 packages/test-sync/mongodb-realm/
 
 packages/m2-buildrepo
+.directory
