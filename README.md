@@ -22,7 +22,7 @@ Version 3.2.8-2 <==> Kotlin 2.2.0
 
 ## How to use:
 
-Replace the `io.realm.kotlin` maven group with `com.infomaniak.realm.kotlin`, and use the `3.2.9` version.
+Replace the `io.realm.kotlin` maven group with `tr.com.maverasoft.realm.kotlin`, and use the `3.2.9` version.
 
 It's all published on Maven Central.
 You might need to add this at the top of your `settings.gradle[.kts]`:
@@ -74,7 +74,7 @@ dependencyResolutionManagement {
 ```
 buildscript {
     dependencies {
-        classpath("com.infomaniak.realm.kotlin:gradle-plugin:y.y.y")
+        classpath("tr.com.maverasoft.realm.kotlin:gradle-plugin:y.y.y")
     }
 }
 ```

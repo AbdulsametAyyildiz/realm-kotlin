@@ -37,11 +37,11 @@ open class RealmPlugin : Plugin<Project> {
             if (conf.name.endsWith("UnitTestRuntimeClasspath")) {
                 conf.resolutionStrategy.dependencySubstitution { ds: DependencySubstitutions ->
                     with(ds) {
-                        substitute(module("com.infomaniak.realm.kotlin:library-base:$PLUGIN_VERSION")).using(
-                            module("com.infomaniak.realm.kotlin:library-base-jvm:$PLUGIN_VERSION")
+                        substitute(module("tr.com.maverasoft.realm.kotlin:library-base:$PLUGIN_VERSION")).using(
+                            module("tr.com.maverasoft.realm.kotlin:library-base-jvm:$PLUGIN_VERSION")
                         )
-                        substitute(module("com.infomaniak.realm.kotlin:cinterop:$PLUGIN_VERSION")).using(
-                            module("com.infomaniak.realm.kotlin:cinterop-jvm:$PLUGIN_VERSION")
+                        substitute(module("tr.com.maverasoft.realm.kotlin:cinterop:$PLUGIN_VERSION")).using(
+                            module("tr.com.maverasoft.realm.kotlin:cinterop-jvm:$PLUGIN_VERSION")
                         )
                     }
                 }
