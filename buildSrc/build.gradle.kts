@@ -15,10 +15,11 @@
  */
 
 // Add support for precompiled script plugins: https://docs.gradle.org/current/userguide/custom_plugins.html#sec:precompiled_plugins
+// Note: kotlin-dsl-precompiled-script-plugins is bundled into kotlin-dsl since Gradle 6.0.
+// Note: kotlin("jvm") removed — let kotlin-dsl auto-provide Gradle's embedded Kotlin to avoid
+//       version mismatch with the Kotlin compiler bundled in Gradle.
 plugins {
     `kotlin-dsl`
-    `kotlin-dsl-precompiled-script-plugins`
-    kotlin("jvm") version Versions.kotlin
 }
 
 gradlePlugin {
@@ -38,6 +39,18 @@ java {
     sourceCompatibility = Versions.sourceCompatibilityVersion
     targetCompatibility = Versions.targetCompatibilityVersion
 }
+
+// Kotlin 2.3 dropped language version 1.8 support; kotlin-dsl defaults to 1.8.
+// K2 LightTree mode also doesn't support precompiled script plugins yet, so disable it.
+// Override on every KotlinCompile task (covers `compilePluginsBlocks` too).
+tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
+    compilerOptions {
+        languageVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
+        apiVersion.set(org.jetbrains.kotlin.gradle.dsl.KotlinVersion.KOTLIN_2_1)
+        freeCompilerArgs.add("-Xuse-fir-lt=false")
+    }
+}
+
 
 repositories {
     google()
