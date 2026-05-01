@@ -552,6 +552,10 @@ fun Task.buildSharedLibrariesForJVMMacOs() {
                 // fails compiler ABI detection for that combo on Apple Silicon hosts.
                 // Drop x86_64 — we only need Apple Silicon for local Mac dev.
                 "-DCMAKE_OSX_ARCHITECTURES=arm64",
+                // Demote `'is_pod' cannot be specialized` (raised by S2 geometry's
+                // legacy std::is_pod specializations) from error to warning. See
+                // the same workaround in the xcodebuild calls below.
+                "-DCMAKE_CXX_FLAGS=-Wno-error=invalid-specialization",
                 project.file("src/jvm/")
             )
         }
