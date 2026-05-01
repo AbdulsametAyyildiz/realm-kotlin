@@ -34,6 +34,27 @@ allprojects {
             jvmTarget.set(JvmTarget.fromTarget(Versions.kotlinJvmTarget))
         }
     }
+
+    // GitHub Packages as a publishing target. Auth comes from either Gradle
+    // properties (`gpr.user` / `gpr.key`) or the `GITHUB_ACTOR` / `GITHUB_TOKEN`
+    // environment variables. The latter is what GitHub Actions and `gh auth
+    // token | GITHUB_TOKEN=$(...)` setups expose.
+    plugins.withId("maven-publish") {
+        configure<PublishingExtension> {
+            repositories {
+                maven {
+                    name = "GitHubPackages"
+                    url = uri("https://maven.pkg.github.com/AbdulsametAyyildiz/realm-kotlin")
+                    credentials {
+                        username = (project.findProperty("gpr.user") as String?)
+                            ?: System.getenv("GITHUB_ACTOR")
+                        password = (project.findProperty("gpr.key") as String?)
+                            ?: System.getenv("GITHUB_TOKEN")
+                    }
+                }
+            }
+        }
+    }
 }
 
 /**

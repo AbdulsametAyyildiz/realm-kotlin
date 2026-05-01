@@ -19,12 +19,12 @@ Project structure is set up to make IntelliJ IDE work.
 
 | Fork version | Kotlin   | AGP    | Gradle  |
 |--------------|----------|--------|---------|
-| 3.2.9        | 2.3.21   | 8.13.2 | 8.14.3  |
+| 3.3.0        | 2.3.21   | 8.13.2 | 8.14.3  |
 
 ## How to use
 
 Replace the `io.realm.kotlin` Maven group with `tr.com.maverasoft.realm.kotlin`, and use
-the `3.2.9` version.
+the `3.3.0` version.
 
 The artifacts are published to your local Maven repository (`~/.m2/`) via
 `./gradlew publishToMavenLocal`. They are not published to Maven Central.
@@ -57,7 +57,7 @@ In your project's `build.gradle[.kts]`:
 ```kotlin
 buildscript {
     dependencies {
-        classpath("tr.com.maverasoft.realm.kotlin:gradle-plugin:3.2.9")
+        classpath("tr.com.maverasoft.realm.kotlin:gradle-plugin:3.3.0")
     }
 }
 ```
