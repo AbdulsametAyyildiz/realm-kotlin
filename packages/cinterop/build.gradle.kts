@@ -548,7 +548,10 @@ fun Task.buildSharedLibrariesForJVMMacOs() {
                 "cmake",
                 *getSharedCMakeFlags(BuildType.RELEASE),
                 "-DCPACK_PACKAGE_DIRECTORY=..",
-                "-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64",
+                // Was "x86_64;arm64" (Universal). New AppleClang 21 (Xcode 26.4)
+                // fails compiler ABI detection for that combo on Apple Silicon hosts.
+                // Drop x86_64 — we only need Apple Silicon for local Mac dev.
+                "-DCMAKE_OSX_ARCHITECTURES=arm64",
                 project.file("src/jvm/")
             )
         }
@@ -656,7 +659,10 @@ fun Task.build_C_API_Macos_Universal(buildVariant: BuildType) {
                 "-DCMAKE_SYSTEM_NAME=Darwin",
                 "-DCPACK_SYSTEM_NAME=macosx",
                 "-DCPACK_PACKAGE_DIRECTORY=..",
-                "-DCMAKE_OSX_ARCHITECTURES=x86_64;arm64",
+                // Was "x86_64;arm64" (Universal). New AppleClang 21 (Xcode 26.4)
+                // fails compiler ABI detection for that combo on Apple Silicon hosts.
+                // Drop x86_64 — we only need Apple Silicon for local Mac dev.
+                "-DCMAKE_OSX_ARCHITECTURES=arm64",
                 "-G",
                 "Xcode",
                 ".."
@@ -674,6 +680,10 @@ fun Task.build_C_API_Macos_Universal(buildVariant: BuildType) {
                 "${buildVariant.type}",
                 "-UseModernBuildSystem=NO", // TODO remove flag when https://github.com/realm/realm-kotlin/issues/141 is fixed
                 "DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING=YES",
+                // realm-core's bundled S2 geometry library specializes std::is_pod, which was
+                // removed in C++20. Newer Apple Clang (Xcode 26+) treats this as a hard error;
+                // demote it to a warning until realm-core upstream replaces is_pod.
+                "OTHER_CPLUSPLUSFLAGS=\$(inherited) -Wno-error=invalid-specialization",
             )
         }
     }
@@ -715,6 +725,8 @@ fun Task.build_C_API_Simulator(arch: String, buildType: BuildType) {
                 "install",
                 "-UseModernBuildSystem=NO", // TODO remove flag when https://github.com/realm/realm-kotlin/issues/141 is fixed
                 "DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING=YES",
+                // See note in build_C_API_Macos_Universal above.
+                "OTHER_CPLUSPLUSFLAGS=\$(inherited) -Wno-error=invalid-specialization",
             )
         }
     }
@@ -757,6 +769,8 @@ fun Task.build_C_API_iOS_Arm64(buildType: BuildType) {
                 "ONLY_ACTIVE_ARCH=NO",
                 "-UseModernBuildSystem=NO",
                 "DISABLE_MANUAL_TARGET_ORDER_BUILD_WARNING=YES",
+                // See note in build_C_API_Macos_Universal above.
+                "OTHER_CPLUSPLUSFLAGS=\$(inherited) -Wno-error=invalid-specialization",
             )
         }
     }
