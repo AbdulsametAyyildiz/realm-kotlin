@@ -20,7 +20,7 @@ import io.realm.kotlin.compiler.Names
 import io.realm.kotlin.compiler.fir.RealmPluginGeneratorKey
 import io.realm.kotlin.compiler.isBaseRealmObject
 import org.jetbrains.kotlin.fir.FirSession
-import org.jetbrains.kotlin.fir.analysis.checkers.getContainingClassSymbol
+import org.jetbrains.kotlin.fir.resolve.getContainingClassSymbol
 import org.jetbrains.kotlin.fir.declarations.utils.isCompanion
 import org.jetbrains.kotlin.fir.extensions.FirDeclarationGenerationExtension
 import org.jetbrains.kotlin.fir.extensions.MemberGenerationContext
